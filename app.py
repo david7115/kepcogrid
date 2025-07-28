@@ -15,7 +15,7 @@ st.markdown(
     '프로그램 제작 SAVE ENERGY VER 1.0'
     '</div>',
     unsafe_allow_html=True
-
+        )
 # --- 입력란/버튼 중앙정렬 ---
 col_blank1, col_main, col_blank2 = st.columns([2,5,2])
 with col_main:
