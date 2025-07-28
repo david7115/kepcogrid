@@ -123,7 +123,7 @@ if search_button:
                                     "접속예정순서",
                                     [f"{i+1}/{total_cnt}" for i in range(len(df))]
                                 )
-                                # ==== [상단: 나의 접수번호 조회 결과 카드, 지정 필드 포함] ====
+                                # ==== [상단: 나의 접수번호 조회 결과 카드, 가로배치] ====
                                 my_row = None
                                 input_clean = value_clean
                                 for key in ["ACPT_SEQNO", "접수번호", "acpt_seqno", "ACPTNO"]:
@@ -139,20 +139,23 @@ if search_button:
                                 ]
                                 # 실제로 표에 존재하는 필드만
                                 show_fields = [f for f in must_fields if f in df.columns]
-                                # 카드 표시
+                                # 카드 표시 (가로 배치)
                                 if my_row is not None:
-                                    row_html = ""
+                                    card_fields = []
                                     for field in show_fields:
                                         val = my_row[field]
-                                        row_html += f"<tr><td style='padding:.24em .8em;color:#125a21;font-weight:600;'>{field}</td><td style='padding:.24em .8em;color:#1943a6;font-weight:600;'>{val}</td></tr>"
+                                        card_fields.append(
+                                            f"<span style='margin-right:28px;'><b style='color:#125a21;'>{field}</b> : "
+                                            f"<b style='color:#1943a6;'>{val}</b></span>"
+                                        )
                                     st.markdown(
                                         f"""<div style="background:#e7f9ed;border-radius:1.2rem;
-                                        padding:1.3rem 2rem 1rem 2rem;box-shadow:0 2px 16px rgba(10,130,40,.11);
-                                        margin-bottom:2.1rem;font-size:1.12em;">
-                                            <b>🟢 나의 접수번호 조회 결과</b>
-                                            <table style="margin-top:8px;">
-                                            {row_html}
-                                            </table>
+                                        padding:1.1rem 2rem 1rem 2rem;box-shadow:0 2px 16px rgba(10,130,40,.11);
+                                        margin-bottom:2.1rem;font-size:1.14em;">
+                                            <b>🟢 나의 접수번호 조회 결과</b><br>
+                                            <div style="margin-top:8px;">
+                                            {' | '.join(card_fields)}
+                                            </div>
                                         </div>""", unsafe_allow_html=True
                                     )
                                 else:
