@@ -4,8 +4,8 @@ import pandas as pd
 import io
 import re
 
-st.set_page_config(page_title="KEPCO 접속현황 조회기 (Excel+고객↔지사 매핑)", layout="centered")
-st.title("🔌 KEPCO 접속현황 조회기 (Excel+고객↔지사 매핑)")
+st.set_page_config(page_title="KEPCO 접속현황 조회기", layout="centered")
+st.title("🔌 KEPCO 접속현황 조회기")
 
 number_input = st.text_input("고객번호 또는 접수번호", placeholder="예: 4830-20231115-010412 또는 12-2945-7459")
 search_type = st.selectbox("검색유형", ["접수번호", "고객번호"])
