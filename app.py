@@ -77,12 +77,26 @@ if search_button:
                     try:
                         data = resp.json()
                         resultlist = extract_resultlist(data)
+                        # cnt_stepB 파싱(없으면 len(resultlist))
+                        cnt = None
+                        for k in ["cnt_stepB", "cnt", "CNT", "cnt_stepb"]:
+                            if k in data:
+                                cnt = data[k]
+                                break
+                        if not cnt:
+                            cnt = len(resultlist)
                         if resultlist:
                             df = pd.DataFrame(resultlist)
-                            # [여기서 END_YM이 null이면 ENDYM 값으로 대체]
+                            # END_YM 대체
                             if "END_YM" in df.columns and "ENDYM" in df.columns:
                                 df["END_YM"] = df["END_YM"].combine_first(df["ENDYM"])
-                            df.insert(0, "일련번호", range(1, len(df) + 1))
+                            # "접속예정순서" 컬럼 추가 ("1/2124" ~)
+                            total_cnt = str(cnt)
+                            df.insert(
+                                0,
+                                "접속예정순서",
+                                [f"{i+1}/{total_cnt}" for i in range(len(df))]
+                            )
                             st.success(f"{len(df)}건 조회 성공")
                             st.dataframe(df, use_container_width=True)
                             output = io.BytesIO()
