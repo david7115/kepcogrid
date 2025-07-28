@@ -5,7 +5,7 @@ import io
 import re
 
 st.set_page_config(page_title="KEPCO 접속현황 조회기", layout="centered")
-st.title("🔌 KEPCO 접속현황 조회기")
+st.title("🔌 KEPCO 접속현황 조회기 (Excel+고객↔지사코드 매핑)")
 
 number_input = st.text_input("고객번호 또는 접수번호", placeholder="예: 4830-20231115-010412 또는 12-2945-7459")
 search_type = st.selectbox("검색유형", ["접수번호", "고객번호"])
@@ -44,16 +44,22 @@ def save_search_history(number, search_type, juris_code):
         st.session_state["search_history"] = st.session_state["search_history"][:10]
 
 def is_acptno_format(num):
-    # 접수번호: 15~20자리 숫자 or xxxx-yyyyyyyy-zzzzzz
     num_only = re.sub(r'\D', '', num)
     dash_type = bool(re.match(r'^\d{4}-\d{8}-\d{6,}$', num))
     return (15 <= len(num_only) <= 20) or dash_type
 
 def is_custno_format(num):
-    # 고객번호: 10자리 숫자 or xx-xxxx-xxxx
     num_only = re.sub(r'\D', '', num)
     dash_type = bool(re.match(r'^\d{2}-\d{4}-\d{4}$', num))
     return (len(num_only) == 10) or dash_type
+
+def get_officecd_for_customer(customer_no):
+    # 1순위: 매핑테이블에서 찾기
+    mapped = st.session_state["customer_to_officecd"].get(customer_no)
+    if mapped:
+        return mapped
+    # 2순위: 임시로 앞 2자리
+    return customer_no[:2]
 
 def build_payload(search_type, value):
     value_clean = value.replace("-", "").strip()
@@ -62,13 +68,11 @@ def build_payload(search_type, value):
         return juris_code, {"dma_param": {"jurisOfficecd": juris_code, "acptNo": value_clean}}
     elif search_type == "고객번호" and is_custno_format(value):
         customer_no = value_clean
-        mapped = st.session_state["customer_to_officecd"].get(customer_no)
-        juris_code = mapped if mapped else customer_no[:2]
+        juris_code = get_officecd_for_customer(customer_no)
         return juris_code, {"dma_param": {"jurisOfficecd": juris_code, "custNo": customer_no}}
     else:
         return None, None
 
-# 상단 최근 검색조건 표시
 st.subheader("📁 최근 검색조건")
 if st.session_state["search_history"]:
     for entry in st.session_state["search_history"]:
@@ -80,7 +84,6 @@ if search_button:
     if not number_input.strip():
         st.warning("고객번호 또는 접수번호를 입력하세요.")
     else:
-        # 형식 체크
         if search_type == "접수번호" and not is_acptno_format(number_input):
             st.error("접수번호 형식이 올바르지 않습니다.\n- 15~20자리 숫자 또는 xxxx-yyyyyyyy-zzzzzz 형식이어야 합니다.")
         elif search_type == "고객번호" and not is_custno_format(number_input):
@@ -119,6 +122,7 @@ if search_button:
                                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                                     )
                                     save_search_history(number_input, search_type, juris_code)
+                                    # 접수번호 결과에서 고객번호-지사코드 자동매핑 저장
                                     if search_type == "접수번호":
                                         if "CUSTNO" in df.columns and "JURIS_OFFICECD" in df.columns:
                                             for row in df.itertuples():
