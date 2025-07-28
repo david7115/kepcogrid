@@ -9,13 +9,14 @@ st.set_page_config(page_title="한전 분산전원 연계 접수진행현황 조
 # --- 중앙 타이틀 ---
 st.markdown('<h1 style="text-align:center;">🔌 한전 분산전원 연계 접수진행현황 조회</h1>', unsafe_allow_html=True)
 
-# --- 제목 아래, 좌측정렬로 버전 표시 ---
+# --- 제목 아래, 중앙정렬로 버전 표시 ---
 st.markdown(
     '<div style="text-align:center; color:#222; font-size:0.97em; opacity:.7; margin-bottom:16px;">'
     '프로그램 제작 SAVE ENERGY VER 1.0'
     '</div>',
     unsafe_allow_html=True
-        )
+)
+
 # --- 입력란/버튼 중앙정렬 ---
 col_blank1, col_main, col_blank2 = st.columns([2,5,2])
 with col_main:
@@ -122,7 +123,7 @@ if search_button:
                                     "접속예정순서",
                                     [f"{i+1}/{total_cnt}" for i in range(len(df))]
                                 )
-                                # ==== [상단: 나의 접수번호 조회 결과 카드] ====
+                                # ==== [상단: 나의 접수번호 조회 결과 카드, 지정 필드 포함] ====
                                 my_row = None
                                 input_clean = value_clean
                                 for key in ["ACPT_SEQNO", "접수번호", "acpt_seqno", "ACPTNO"]:
@@ -131,9 +132,17 @@ if search_button:
                                         if not match_row.empty:
                                             my_row = match_row.iloc[0]
                                             break
+                                # 카드에 항상 표시할 필드 리스트 (순서 반드시 맞춤)
+                                must_fields = [
+                                    "접속예정순서", "ACPT_SEQNO", "EQUIPCAPA", "GENSOURCENM",
+                                    "ACPTYMD", "PROCTPNM", "UPPOOFFICENM", "JURISOFFICENM", "ENDYM", "APPLNM"
+                                ]
+                                # 실제로 표에 존재하는 필드만
+                                show_fields = [f for f in must_fields if f in df.columns]
+                                # 카드 표시
                                 if my_row is not None:
                                     row_html = ""
-                                    for field in df.columns[:8]:
+                                    for field in show_fields:
                                         val = my_row[field]
                                         row_html += f"<tr><td style='padding:.24em .8em;color:#125a21;font-weight:600;'>{field}</td><td style='padding:.24em .8em;color:#1943a6;font-weight:600;'>{val}</td></tr>"
                                     st.markdown(
