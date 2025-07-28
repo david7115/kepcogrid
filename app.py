@@ -43,7 +43,6 @@ def save_search_history(number, juris_code):
         st.session_state["search_history"] = st.session_state["search_history"][:10]
 
 def is_acptno_format(num):
-    # 15~20자리 숫자 or xxxx-yyyyyyyy-zzzzzz
     num_only = re.sub(r'\D', '', num)
     dash_type = bool(re.match(r'^\d{4}-\d{8}-\d{6,}$', num))
     return (15 <= len(num_only) <= 20) or dash_type
@@ -80,6 +79,9 @@ if search_button:
                         resultlist = extract_resultlist(data)
                         if resultlist:
                             df = pd.DataFrame(resultlist)
+                            # [여기서 END_YM이 null이면 ENDYM 값으로 대체]
+                            if "END_YM" in df.columns and "ENDYM" in df.columns:
+                                df["END_YM"] = df["END_YM"].combine_first(df["ENDYM"])
                             df.insert(0, "일련번호", range(1, len(df) + 1))
                             st.success(f"{len(df)}건 조회 성공")
                             st.dataframe(df, use_container_width=True)
