@@ -11,11 +11,10 @@ st.markdown('<h1 style="text-align:center;">🔌 한전 분산전원 연계 접�
 
 # --- 제목 아래, 좌측정렬로 버전 표시 ---
 st.markdown(
-    '<div style="text-align:left; color:#222; font-size:0.97em; opacity:.7; margin-bottom:18px;">'
+    '<div style="text-align:center; color:#222; font-size:0.97em; opacity:.7; margin-bottom:16px;">'
     '프로그램 제작 SAVE ENERGY VER 1.0'
     '</div>',
     unsafe_allow_html=True
-)
 
 # --- 입력란/버튼 중앙정렬 ---
 col_blank1, col_main, col_blank2 = st.columns([2,5,2])
