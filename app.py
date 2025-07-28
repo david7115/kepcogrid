@@ -44,14 +44,16 @@ def save_search_history(number, search_type, juris_code):
         st.session_state["search_history"] = st.session_state["search_history"][:10]
 
 def is_acptno_format(num):
-    # 접수번호: 15자리 이상 or 하이픈 구분 3개 (4-8-6 등)
+    # 접수번호: 15~20자리 숫자 or xxxx-yyyyyyyy-zzzzzz
     num_only = re.sub(r'\D', '', num)
-    return len(num_only) >= 15 or (num.count('-') >= 2 and len(num) > 12)
+    dash_type = bool(re.match(r'^\d{4}-\d{8}-\d{6,}$', num))
+    return (15 <= len(num_only) <= 20) or dash_type
 
 def is_custno_format(num):
-    # 고객번호: 10~12자리 or 하이픈 구분 2개
+    # 고객번호: 10자리 숫자 or xx-xxxx-xxxx
     num_only = re.sub(r'\D', '', num)
-    return (10 <= len(num_only) <= 12) or (num.count('-') == 2 and len(num_only) <= 12)
+    dash_type = bool(re.match(r'^\d{2}-\d{4}-\d{4}$', num))
+    return (len(num_only) == 10) or dash_type
 
 def build_payload(search_type, value):
     value_clean = value.replace("-", "").strip()
@@ -78,59 +80,61 @@ if search_button:
     if not number_input.strip():
         st.warning("고객번호 또는 접수번호를 입력하세요.")
     else:
-        juris_code, payload = build_payload(search_type, number_input)
-        # [1] 형식 오류 시 안내
-        if juris_code is None or payload is None:
-            st.error("입력값 형식이 올바르지 않습니다. 접수번호(15~20자/하이픈3개) 또는 고객번호(10~12자/하이픈2개)를 정확히 입력하세요.")
+        # 형식 체크
+        if search_type == "접수번호" and not is_acptno_format(number_input):
+            st.error("접수번호 형식이 올바르지 않습니다.\n- 15~20자리 숫자 또는 xxxx-yyyyyyyy-zzzzzz 형식이어야 합니다.")
+        elif search_type == "고객번호" and not is_custno_format(number_input):
+            st.error("고객번호 형식이 올바르지 않습니다.\n- 10자리 숫자 또는 xx-xxxx-xxxx 형식이어야 합니다.")
         else:
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json; charset=UTF-8",
-                "User-Agent": "Mozilla/5.0"
-            }
-            with st.spinner("서버 조회 중... (최대 30초)"):
-                try:
-                    resp = requests.post(API_URL, headers=headers, json=payload, timeout=30)
-                    text = resp.text.strip()
-                    st.info(f"**검색조건:** [{search_type}] `{number_input}` | **지사코드:** `{juris_code}`")
-                    if resp.status_code == 200 and text:
-                        try:
-                            data = resp.json()
-                            resultlist = extract_resultlist(data)
-                            if resultlist:
-                                df = pd.DataFrame(resultlist)
-                                df.insert(0, "일련번호", range(1, len(df) + 1))
-                                st.success(f"{len(df)}건 조회 성공")
-                                st.dataframe(df, use_container_width=True)
-                                output = io.BytesIO()
-                                with pd.ExcelWriter(output, engine="openpyxl") as writer:
-                                    df.to_excel(writer, index=False, sheet_name="KEPCO")
-                                st.download_button(
-                                    label="Excel 다운로드 (.xlsx)",
-                                    data=output.getvalue(),
-                                    file_name="kepco_result.xlsx",
-                                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                )
-                                save_search_history(number_input, search_type, juris_code)
-                                # 접수번호 검색이면 고객번호-지사코드 매핑
-                                if search_type == "접수번호":
-                                    if "CUSTNO" in df.columns and "JURIS_OFFICECD" in df.columns:
-                                        for row in df.itertuples():
-                                            cust_no = str(getattr(row, "CUSTNO"))
-                                            office_cd = str(getattr(row, "JURIS_OFFICECD"))
-                                            st.session_state["customer_to_officecd"][cust_no] = office_cd
-                            else:
-                                st.warning("📭 결과가 없습니다. 입력값, 지사코드, 유형을 확인하세요.")
-                        except Exception as e:
-                            st.error(f"❌ 응답 파싱 오류: {e}")
-                            st.code(text[:500], language="html")
-                    else:
-                        st.warning("⚠️ 유효한 응답이 없습니다. 입력값/지사코드를 확인하세요.")
-                except requests.exceptions.Timeout:
-                    st.error("❌ 서버 응답 타임아웃 (30초 초과). 서버 상황에 따라 재시도 필요.")
-                except Exception as e:
-                    st.error(f"🚨 조회 오류: {e}")
-
+            juris_code, payload = build_payload(search_type, number_input)
+            if juris_code is None or payload is None:
+                st.error("입력값 형식이 올바르지 않습니다. 번호를 다시 확인하세요.")
+            else:
+                headers = {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json; charset=UTF-8",
+                    "User-Agent": "Mozilla/5.0"
+                }
+                with st.spinner("서버 조회 중... (최대 30초)"):
+                    try:
+                        resp = requests.post(API_URL, headers=headers, json=payload, timeout=30)
+                        text = resp.text.strip()
+                        st.info(f"**검색조건:** [{search_type}] `{number_input}` | **지사코드:** `{juris_code}`")
+                        if resp.status_code == 200 and text:
+                            try:
+                                data = resp.json()
+                                resultlist = extract_resultlist(data)
+                                if resultlist:
+                                    df = pd.DataFrame(resultlist)
+                                    df.insert(0, "일련번호", range(1, len(df) + 1))
+                                    st.success(f"{len(df)}건 조회 성공")
+                                    st.dataframe(df, use_container_width=True)
+                                    output = io.BytesIO()
+                                    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+                                        df.to_excel(writer, index=False, sheet_name="KEPCO")
+                                    st.download_button(
+                                        label="Excel 다운로드 (.xlsx)",
+                                        data=output.getvalue(),
+                                        file_name="kepco_result.xlsx",
+                                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                    )
+                                    save_search_history(number_input, search_type, juris_code)
+                                    if search_type == "접수번호":
+                                        if "CUSTNO" in df.columns and "JURIS_OFFICECD" in df.columns:
+                                            for row in df.itertuples():
+                                                cust_no = str(getattr(row, "CUSTNO"))
+                                                office_cd = str(getattr(row, "JURIS_OFFICECD"))
+                                                st.session_state["customer_to_officecd"][cust_no] = office_cd
+                                else:
+                                    st.warning("📭 결과가 없습니다. 입력값, 지사코드, 유형을 확인하세요.")
+                            except Exception as e:
+                                st.error(f"❌ 응답 파싱 오류: {e}")
+                                st.code(text[:500], language="html")
+                        else:
+                            st.warning("⚠️ 유효한 응답이 없습니다. 입력값/지사코드를 확인하세요.")
+                    except requests.exceptions.Timeout:
+                        st.error("❌ 서버 응답 타임아웃 (30초 초과). 서버 상황에 따라 재시도 필요.")
+                    except Exception as e:
+                        st.error(f"🚨 조회 오류: {e}")
 elif search_button:
     st.warning("고객번호 또는 접수번호를 입력하세요.")
-
