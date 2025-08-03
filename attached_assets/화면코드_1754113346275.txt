@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>DEFAULT</w2:type>
+    	<w2:buildDate />
+    	<xf:model>
+    		<xf:instance>
+    			<data xmlns="" />
+    		</xf:instance>
+    		<w2:dataCollection baseNode="map"></w2:dataCollection>
+    		<w2:workflowCollection></w2:workflowCollection>
+    	</xf:model>
+    	<script type="text/javascript" lazy="false"><![CDATA[// EWM092D00.xml, EWM093D00.xml 에서 wframe으로 호출되어 사용되는 화면입니다.
+// FusionChartXT
+scwin.onpageload = function() {
+	let paramData = $p.getParameter("wframeParam");
+	if(paramData != null){
+		let data_toString = JSON.stringify(paramData);
+		let data = JSON.parse(JSON.stringify(paramData));
+		//console.log("wframeParam >>>>>> "+data_toString);
+
+		
+		//변전소 차트 데이터 설정
+		let jsonData1 = {
+						"data": [
+							{
+								"label": "접속기준 접속용량",
+								"value": data.subst_pwr,
+								"color": "#2970E1"
+							},
+							{
+								"label": "접속계획 반영 접속용량",
+								"value": data.g_subst_capa,
+								"color": "#20994F"
+							}
+						],
+						"trendlines":[{
+								"line":[{
+									"startvalue": data.subst_capa,
+									"color": "#CC0000",
+									"thickness": "2",
+									"dashed": "0",
+									"tooltext": "접속기준용량"
+								}]
+							}]
+		};
+
+		//주변압기 차트 데이터 설정
+		let jsonData2 = {
+						"data": [
+							{
+								"label": "접속기준 접속용량",
+								"value": data.mtr_pwr,
+								"color": "#2970E1"
+							},
+							{
+								"label": "접속계획 반영 접속용량",
+								"value": data.g_mtr_capa,
+								"color": "#20994F"
+							}
+						],
+						"trendlines":[{
+								"line":[{
+									"startvalue": data.mtr_capa,
+									"color": "#CC0000",
+									"thickness": "2",
+									"dashed": "0",
+									"tooltext": "접속기준용량"
+								}]
+							}]
+		};
+
+		//배전선로 차트 데이터 설정
+		let jsonData3 = {
+						"data": [
+							{
+								"label": "접속기준 접속용량",
+								"value": data.dl_pwr,
+								"color": "#2970E1"
+							},
+							{
+								"label": "접속계획 반영 접속용량",
+								"value": data.g_dl_capa,
+								"color": "#20994F"
+							}
+						],
+						"trendlines":[{
+								"line":[{
+									"startvalue": data.dl_capa,
+									"color": "#CC0000",
+									"thickness": "2",
+									"dashed": "0",
+									"tooltext": "접속기준용량"
+								}]
+							}]
+		};
+
+		let options1 = {
+			yAxisMaxValue: data.substMax,	// 그래프 y축 최대치 설정
+			theme : "fusion",
+			scrollheight : "0",
+			flatScrollBars : "1",
+			scrollShowButtons: "0",
+			showValues : "1",       //그래프 위에 값을 보여준다.
+			scrollColor : "#cccccc",
+			showToolTip : "0",
+			showLegend : "0",		// 하단 라벨및부분 hide
+			showXAxisLine : "0",
+			showYAxisLine : "0",
+			showLabels : "0",		// 하단 라벨 없애는 옵션
+			showYAxisValues : "1",  // 왼쪽 y축 지표값 수치 표시여부
+			scrollToEnd : "1",
+			showBorder : "0",		// FusionChart 테두리라인 숨김처리
+			divlinethickness : "2",	// 배경에 표시되는 y축 지표값 라인두께
+			divlineAlpha : "10",	// 배경에 표시되는 y축 지표값 라인투명도
+			trendValueAlpha : "0"	// 접속기준용량 값 투명도 > 퍼블에 따라 숨김처리함.			
+		}
+
+		let options2 = {
+			yAxisMaxValue: data.mtrMax,	// 그래프 y축 최대치 설정
+			theme : "fusion",
+			scrollheight : "0",
+			flatScrollBars : "1",
+			scrollShowButtons: "0",
+			showValues : "1",       //그래프 위에 값을 보여준다.
+			scrollColor : "#cccccc",
+			showToolTip : "0",
+			showLegend : "0",		// 하단 라벨및부분 hide
+			showXAxisLine : "0",
+			showYAxisLine : "0",
+			showLabels : "0",		// 하단 라벨 없애는 옵션
+			showYAxisValues : "1",  // 왼쪽 y축 지표값 수치 표시여부
+			scrollToEnd : "1",
+			showBorder : "0",		// FusionChart 테두리라인 숨김처리
+			divlinethickness : "2",	// 배경에 표시되는 y축 지표값 라인두께
+			divlineAlpha : "10",	// 배경에 표시되는 y축 지표값 라인투명도
+			trendValueAlpha : "0"	// 접속기준용량 값 투명도 > 퍼블에 따라 숨김처리함.			
+		}
+
+		let options3 = {
+			yAxisMaxValue: data.dlMax,	// 그래프 y축 최대치 설정
+			theme : "fusion",
+			scrollheight : "0",
+			flatScrollBars : "1",
+			scrollShowButtons: "0",
+			showValues : "1",       //그래프 위에 값을 보여준다.
+			scrollColor : "#cccccc",
+			showToolTip : "0",
+			showLegend : "0",		// 하단 라벨및부분 hide
+			showXAxisLine : "0",
+			showYAxisLine : "0",
+			showLabels : "0",		// 하단 라벨 없애는 옵션
+			showYAxisValues : "1",  // 왼쪽 y축 지표값 수치 표시여부
+			scrollToEnd : "1",
+			showBorder : "0",		// FusionChart 테두리라인 숨김처리
+			divlinethickness : "2",	// 배경에 표시되는 y축 지표값 라인두께
+			divlineAlpha : "10",	// 배경에 표시되는 y축 지표값 라인투명도
+			trendValueAlpha : "0"	// 접속기준용량 값 투명도 > 퍼블에 따라 숨김처리함.			
+		}
+		fc_subst.setJSONData(jsonData1);
+		fc_mtr.setJSONData(jsonData2);
+		fc_dl.setJSONData(jsonData3);
+		fc_subst.setChartAttribute(options1);
+		fc_mtr.setChartAttribute(options2);
+		fc_dl.setChartAttribute(options3);
+		fc_subst.draw();
+		fc_mtr.draw();
+		fc_dl.draw();
+
+		scwin.dataInit(data.subst_nm, data.subst_cd, data.mtr_no, data.dl_cd, data.dl_nm, data.subst_pwr, data.subst_capa, data.g_subst_capa, data.mtr_pwr, data.g_mtr_capa, data.mtr_capa, data.dl_pwr, data.g_dl_capa, data.dl_capa);
+		scwin.selectDl(data.addr_do, data.subst_cd, data.subst_Dl_pwr, data.subst_Dl_cnt, data.subst_Dl_state, data.mtr_Dl_pwr, data.mtr_Dl_cnt, data.mtr_Dl_state, data.dl_Dl_pwr, data.dl_Dl_cnt, data.dl_Dl_state);
+	}
+};
+
+scwin.dataInit = function(subst_nm, subst_cd, mtr_no, dl_cd, dl_nm, subst_pwr, subst_capa, g_subst_capa, mtr_pwr, g_mtr_capa, mtr_capa, dl_pwr, g_dl_capa, dl_capa){
+	let subst_vol1_dsc_1_txt = (subst_capa - subst_pwr);
+	let subst_vol1_dsc_2_txt = (subst_capa - g_subst_capa);
+	let mtr_vol2_dsc_1_txt = (mtr_capa - mtr_pwr);
+	let mtr_vol2_dsc_2_txt = (mtr_capa - g_mtr_capa);
+	let dl_vol3_dsc_1_txt = (dl_capa - dl_pwr);
+	let dl_vol3_dsc_2_txt = (dl_capa - g_dl_capa);
+
+	if(subst_vol1_dsc_1_txt < 0){
+		subst_vol1_dsc_1_txt = "0";
+	}
+	if(subst_vol1_dsc_2_txt < 0){
+		subst_vol1_dsc_2_txt = "0";
+	}
+	if(mtr_vol2_dsc_1_txt < 0){
+		mtr_vol2_dsc_1_txt = "0";
+	}
+	if(mtr_vol2_dsc_2_txt < 0){
+		mtr_vol2_dsc_2_txt = "0";
+	}
+	if(dl_vol3_dsc_1_txt < 0){
+		dl_vol3_dsc_1_txt = "0";
+	}
+	if(dl_vol3_dsc_2_txt < 0){
+		dl_vol3_dsc_2_txt = "0";
+	}
+
+	txt_subst_nm_dsc.setValue(subst_nm);
+	txt_subst_nm_dsc2.setValue(subst_nm);
+	txt_subst_nm_dsc3.setValue(subst_nm);
+	txt_mtr_no_dsc.setValue("#"+mtr_no);
+	txt_mtr_no_dsc2.setValue("#"+mtr_no);
+	txt_dl_nm_dsc.setValue(dl_nm);
+
+	txt_subst_nm_title.setValue(subst_nm);
+	txt_subst_nm_label.setValue(subst_nm);
+	txt_mtr_no_label.setValue("#"+mtr_no);
+	txt_dl_nm_label.setValue(dl_nm);
+
+	txt_subst_capa_dsc.setValue(subst_capa);
+	txt_g_subst_capa_dsc.setValue(g_subst_capa);
+
+	txt_subst_pwr_dsc.setValue(subst_pwr);
+	txt_mtr_capa_dsc.setValue(mtr_capa);
+	txt_g_mtr_capa_dsc.setValue(g_mtr_capa);
+	txt_mtr_pwr_dsc.setValue(mtr_pwr);
+	txt_dl_capa_dsc.setValue(dl_capa);
+	txt_g_dl_capa_dsc.setValue(g_dl_capa);
+	txt_dl_pwr_dsc.setValue(dl_pwr);
+
+	txt_subst_vol1_dsc_1.setValue(subst_vol1_dsc_1_txt);
+	txt_subst_vol1_dsc_2.setValue(subst_vol1_dsc_2_txt);
+	txt_mtr_vol2_dsc_1.setValue(mtr_vol2_dsc_1_txt);
+	txt_mtr_vol2_dsc_2.setValue(mtr_vol2_dsc_2_txt);
+	txt_dl_vol3_dsc_1.setValue(dl_vol3_dsc_1_txt);
+	txt_dl_vol3_dsc_2.setValue(dl_vol3_dsc_2_txt);
+
+	if (subst_vol1_dsc_1_txt <= 0 || subst_vol1_dsc_2_txt <= 0) {
+		txt_substYn.setValue("변전소 : 여유용량 없음");
+		txt_substYn.setStyle("color", "#ff0000");
+		//.css('color','#ff0000');
+	} else {
+		txt_substYn.setValue("변전소 : 접속가능")
+		txt_substYn.setStyle("color", "#1479c7");
+		//.css('color','#1479c7');
+	}
+	
+	if (mtr_vol2_dsc_1_txt <= 0 || mtr_vol2_dsc_2_txt <= 0) {
+		txt_mtrYn.setValue("주변압기 : 여유용량 없음");
+		txt_mtrYn.setStyle("color", "#ff0000");
+		//.css('color','#ff0000');
+	} else {
+		txt_mtrYn.setValue("주변압기 : 접속가능");
+		txt_mtrYn.setStyle("color", "#1479c7");
+		//.css('color','#1479c7');
+	}
+	
+	if (dl_vol3_dsc_1_txt <= 0 || dl_vol3_dsc_2_txt <= 0) {
+		txt_dlYn.setValue("배전선로 : 여유용량 없음");
+		txt_dlYn.setStyle("color","#ff0000");
+		//.css('color','#ff0000');
+	} else {
+		txt_dlYn.setValue("배전선로 : 접속가능");
+		txt_dlYn.setStyle("color","#1479c7");
+		//.css('color','#1479c7');
+	}
+}
+
+scwin.selectDl = function(addr_do, subst_cd, subst_Dl_pwr, subst_Dl_cnt, subst_Dl_state, mtr_Dl_pwr, mtr_Dl_cnt, mtr_Dl_state, dl_Dl_pwr, dl_Dl_cnt, dl_Dl_state){
+	//SelectDl(subst_cd, dl_cd);
+	txt_ymd_cnt_01.setValue(subst_Dl_cnt);
+	txt_ymd_pwr_01.setValue(subst_Dl_pwr);
+	txt_ymd_cnt_02.setValue(mtr_Dl_cnt);
+	txt_ymd_pwr_02.setValue(mtr_Dl_pwr);
+	txt_ymd_cnt_03.setValue(dl_Dl_cnt);
+	txt_ymd_pwr_03.setValue(dl_Dl_pwr);
+
+	let guideText = "";
+	if(subst_cd == 'S621' || subst_cd == 'D372' ){ //운남-S621, 안좌-D372, 
+		guideText = "※ 해당 변전소는 송전계통 보강이 필요하므로, 계통보강('31.12월 예정) 후 발전소 연계가능";
+		txt_guideText.setValue(guideText);
+		grp_guideText.show();
+	}
+	else if(addr_do == "광주광역시" || addr_do == "전라남도"){
+		guideText = "※ 해당 변전소는 송전계통 보강이 필요하므로, 계통보강('31.12월 예정) 후 발전소 연계가능 (’24. 8. 31부터 적용) ";
+		txt_guideText.setValue(guideText);
+		grp_guideText.show();
+	}
+	else if(addr_do == "전북특별자치도" && subst_cd == '2674' || subst_cd == '2274' || subst_cd == '2463' || subst_cd == 'SC03'|| subst_cd == 'D510' || subst_cd == '2742' || subst_cd == 'E541'){
+		guideText = "※ 해당 변전소는 송전계통 보강이 필요하므로, 계통보강('31.12월 예정) 후 발전소 연계가능";
+		txt_guideText.setValue(guideText);
+		grp_guideText.show();
+	}
+	else if(addr_do == "제주특별자치도"){	
+		guideText = "※ 해당 변전소는 신규 발전소 연계시 전력수급의 균형 및 안정적 전력계통 운영에 지장을 줄 수 있어, 발전소 연계 잠정보류(추후 대책 마련 예정) [단, 1MW 이하 발전소의 경우 ‘24. 8. 31부터 적용]";
+		txt_guideText.setValue(guideText);
+		grp_guideText.show();
+	}
+	else if(addr_do == "전북특별자치도"){
+		guideText = "※ 해당 변전소는 송전계통 보강이 필요하므로, 계통보강('31.12월 예정) 후 발전소 연계가능 (’24. 8. 31부터 적용)";
+		txt_guideText.setValue(guideText);
+		grp_guideText.show();
+	}
+	else if(addr_do == "강원특별자치도" && subst_cd == '2510' || subst_cd == '4363' || subst_cd == 'S401' || subst_cd == 'S418' || subst_cd == 'S440'  || subst_cd == 'S423' || subst_cd == '2447' || subst_cd == 'S408' || subst_cd == 'S432' || subst_cd == 'E198' || subst_cd == 'D338' || subst_cd == 'E404' || subst_cd == 'E541'){
+		//신태백-2510, 북평-4363, 신양양-S401, 삼척그린-S418, 삼척-S418, 도계-S440, 주문진-S423, 속초-2447, 영동화력-S408, 고한-S432, 강릉-E198, 북강릉-D338, 간성-E404, 내초-E541
+		guideText = "※ 해당 변전소는 송전계통 보강이 필요하므로, 계통보강('26.6월 예정) 후 발전소 연계가능";
+		txt_guideText.setValue(guideText);
+		grp_guideText.show();
+	}
+	else if(addr_do == "경상북도" && subst_cd == '2521' || subst_cd == 'S718' || subst_cd == 'E204' || subst_cd == '2733' || subst_cd == 'E318'){
+		//신영주-2521, 봉화-S718, 영주-E204, 울진-2733, 평해-E318,   
+		guideText = "※ 해당 변전소는 송전계통 보강이 필요하므로, 계통보강('26.12월 예정) 후 발전소 연계가능";
+		txt_guideText.setValue(guideText);
+		grp_guideText.show();
+	}
+	else{		
+		guideText = "";
+		txt_guideText.setValue(guideText);
+		grp_guideText.hide();
+	}
+};
+
+scwin.onpageunload = function() {
+	
+};]]></script>
+    	<style type="text/css"><![CDATA[ 
+			    		
+    	]]></style>
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    
+    	<!-- [퍼블] 상세보기 클릭시에만 보임 -->
+    	<xf:group class="item_box on" id="" style="">
+    		<w2:textbox class="title" id="txt_subst_nm_title" label="사*" style="" tagname="h3" ev:onclick="scwin.txt_title1_onclick"></w2:textbox>
+    		<xf:group class="acco_cont info_box" id="">
+    			<xf:group class="graph_legend" id="" style="" tagname="ul">
+    				<xf:group class="" id="" tagname="li">
+    					<w2:textbox class="legend line" id="" label="접속기준용량" style="" tagname="span"></w2:textbox>
+    				</xf:group>
+    				<xf:group class="" id="" style="" tagname="li">
+    					<w2:textbox class="legend blue" id="" label="접수기준 접속용량" style="" tagname="span"></w2:textbox>
+    				</xf:group>
+    				<xf:group class="" id="" style="" tagname="li">
+    					<w2:textbox class="legend green" id="" label="접속계획 반영 접속용량" style="" tagname="span"></w2:textbox>
+    				</xf:group>
+    			</xf:group>
+    			<xf:group class="pcbox col3 mg_lg" id="" style="">
+    				<xf:group class="column" id="">
+    					<xf:group class="flex_m justify-between align-end" id="">
+    						<w2:textbox class="info_title" id="txt_substYn" label="변선소 : 접속가능" style="" tagname="h4" ev:onclick="scwin.title_substAble_onclick"></w2:textbox>
+    						<w2:textbox class="tar mb_10" id="" label="단위 : kW" style=""></w2:textbox>
+    					</xf:group>
+    					<w2:fusionchart accessibility="true" chartType="Column2D" drawType="javascript" id="fc_subst" labelNode="label"
+    						plotColor="#2970e1,#20994f" ref="" runflashAt="IE6,IE7,IE8" seriesType="advanced"
+    						style="width: 100%;height: 300px;" valueNode="value" seriesColumns="[['afterMny']]">
+    					</w2:fusionchart>
+    					<w2:textbox class="graph_title" id="txt_subst_nm_label" label="사*" style=""></w2:textbox>
+    				</xf:group>
+    				<xf:group class="column mt_0" id="" style="">
+    					<xf:group class="flex_m justify-between align-end" id="">
+    						<w2:textbox class="info_title" id="txt_mtrYn" label="주변압기 : 접속가능" style="" tagname="h4"></w2:textbox>
+    						<w2:textbox class="tar mb_10" id="" label="단위 : kW" style=""></w2:textbox>
+    					</xf:group>
+    					<w2:fusionchart accessibility="true" chartType="Column2D" drawType="javascript" id="fc_mtr" labelNode="col1"
+    						plotColor="#2970e1,#20994f" ref="" runflashAt="IE6,IE7,IE8" seriesNode="col1" seriesType="simple"
+    						style="width: 100%;height: 300px;" valueNode="col2">
+    					</w2:fusionchart>
+    					<w2:textbox class="graph_title" id="txt_mtr_no_label" label="#2" style=""></w2:textbox>
+    				</xf:group>
+    				<xf:group class="column mt_0" id="" style="">
+    					<xf:group class="flex_m justify-between align-end" id="">
+    						<w2:textbox class="info_title" id="txt_dlYn" label="배전선로 : 접속가능" style="" tagname="h4"></w2:textbox>
+    						<w2:textbox class="tar mb_10" id="" label="단위 : kW" style=""></w2:textbox>
+    					</xf:group>
+    					<w2:fusionchart accessibility="true" chartType="Column2D" drawType="javascript" id="fc_dl" labelNode="col1"
+    						plotColor="#2970e1,#20994f" ref="" runflashAt="IE6,IE7,IE8" seriesNode="col1" seriesType="simple"
+    						style="width: 100%;height: 300px;" valueNode="col2">
+    					</w2:fusionchart>
+    					<w2:textbox class="graph_title" id="txt_dl_nm_label" label="북면" style=""></w2:textbox>
+    				</xf:group>
+    			</xf:group>
+    			<w2:textbox class="info_title" id="" label="해설" style="" tagname="h4"></w2:textbox>
+    			<xf:group class="dot_list" id="" style="" tagname="ul">
+    				<xf:group class="grp_inline" id="" tagname="li">
+    					<w2:textbox class="text_blue" escape="false" id="txt_subst_nm_dsc" label="사*" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="mx_5" escape="false" id="" label="변전소 접속기준용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_subst_capa_dsc" label="180,000" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mr_5" escape="false" id="" label="kW 이며, 접수기준 접속용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_subst_pwr_dsc" label="20,167" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mr_5" escape="false" id="" label="kW 이고 접속계획 반영 접속용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_g_subst_capa_dsc" label="17,938" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mr_5" escape="false" id="" label="kW 으로" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_danger mr_5" escape="false" id="" label="여유용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_subst_vol1_dsc_1" label="159,833" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="" label="/" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_subst_vol1_dsc_2" label="162,062" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mx_5" escape="false" id="" label="kW 입니다." style="" tagname="span"></w2:textbox>
+    				</xf:group>
+    				<xf:group class="grp_inline" id="" style="" tagname="li">
+    					<w2:textbox class="text_blue" escape="false" id="txt_subst_nm_dsc2" label="사*" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="mx_5" escape="false" id="" label="변전소" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_mtr_no_dsc" label="#2" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="mx_5" escape="false" id="" label="주변압기 접속기준용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_mtr_capa_dsc" label="50,000" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mr_5" escape="false" id="" label="kW 이며, 접수기준 접속용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_mtr_pwr_dsc" label="0" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mr_5" escape="false" id="" label="kW 이고 접속계획 반영 접속용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_g_mtr_capa_dsc" label="0" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mr_5" escape="false" id="" label="kW 으로" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_danger mr_5" escape="false" id="" label="여유용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_mtr_vol2_dsc_1" label="50,000" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="" label="/" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_mtr_vol2_dsc_2" label="50,000" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mx_5" escape="false" id="" label="kW 입니다." style="" tagname="span"></w2:textbox>
+    				</xf:group>
+    				<xf:group class="grp_inline" id="" style="" tagname="li">
+    					<w2:textbox class="text_blue" escape="false" id="txt_subst_nm_dsc3" label="사*" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="mx_5" escape="false" id="" label="변전소" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_mtr_no_dsc2" label="#2" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="mx_5" escape="false" id="" label="주변압기" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_dl_nm_dsc" label="남현" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="mx_5" escape="false" id="" label="배전선로 접속기준용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_dl_capa_dsc" label="13,000" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mr_5" escape="false" id="" label="kW 이며, 접수기준 접속용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_dl_pwr_dsc" label="0" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mr_5" escape="false" id="" label="kW 이고 접속계획 반영 접속용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_g_dl_capa_dsc" label="0" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mr_5" escape="false" id="" label="kW 으로" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_danger mr_5" escape="false" id="" label="여유용량은" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_dl_vol3_dsc_1" label="13,000" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="" label="/" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="text_blue" escape="false" id="txt_dl_vol3_dsc_2" label="13,000" style="" tagname="span" displayFormat="#,###"></w2:textbox>
+    					<w2:textbox class="mx_5" escape="false" id="" label="kW 입니다." style="" tagname="span"></w2:textbox>
+    				</xf:group>
+    				<xf:group class="grp_inline" id="grp_guideText" style="" tagname="li">
+    					<w2:textbox class="mx_5" escape="false" id="txt_guideText" label="※ 해당 변전소 계통보강 안내멘트" style="color:#ff0000; font-weight:700; background-color:#ffff00;" tagname="span"></w2:textbox>
+    				</xf:group>
+    			</xf:group>
+    			<w2:textbox class="info_title" id="" label="배전선로 접속예정 건수/용량" style="" tagname="h4"></w2:textbox>
+    			<xf:group class="step_box2 col3 tac" id="" style="" tagname="ul">
+    				<xf:group id="" tagname="li">
+    					<w2:textbox class="step_tit" escape="false" id="" label="STEP 01" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="step_subtit" escape="false" id="" label="접수" style="" tagname="span"></w2:textbox>
+    					<w2:textbox escape="false" id="txt_ymd_cnt_01" label="0 건" style="" tagname="p" displayFormat="#,### 건"></w2:textbox>
+    					<w2:textbox escape="false" id="txt_ymd_pwr_01" label="0kW" style="" tagname="p" displayFormat="#,###kW"></w2:textbox>
+    					<xf:group class="tri_arrow" id="">
+    						<w2:textbox class="" escape="false" id="" label="화살표" style="" tagname="span"></w2:textbox>
+    						<w2:textbox class="" escape="false" id="" label="화살표" style="" tagname="span"></w2:textbox>
+    						<w2:textbox class="" escape="false" id="" label="화살표" style="" tagname="span"></w2:textbox>
+    					</xf:group>
+    				</xf:group>
+    				<xf:group id="" style="" tagname="li">
+    					<w2:textbox class="step_tit" escape="false" id="" label="STEP 02" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="step_subtit" escape="false" id="" label="공용망보강" style="" tagname="span"></w2:textbox>
+    					<w2:textbox escape="false" id="txt_ymd_cnt_02" label="0 건" style="" tagname="p" displayFormat="#,### 건"></w2:textbox>
+    					<w2:textbox escape="false" id="txt_ymd_pwr_02" label="0kW" style="" tagname="p" displayFormat="#,###kW"></w2:textbox>
+    					<xf:group class="tri_arrow" id="">
+    						<w2:textbox class="" escape="false" id="" label="화살표" style="" tagname="span"></w2:textbox>
+    						<w2:textbox class="" escape="false" id="" label="화살표" style="" tagname="span"></w2:textbox>
+    						<w2:textbox class="" escape="false" id="" label="화살표" style="" tagname="span"></w2:textbox>
+    					</xf:group>
+    				</xf:group>
+    				<xf:group id="" style="" tagname="li">
+    					<w2:textbox class="step_tit" escape="false" id="" label="STEP 03" style="" tagname="span"></w2:textbox>
+    					<w2:textbox class="step_subtit" escape="false" id="" label="접속공사" style="" tagname="span"></w2:textbox>
+    					<w2:textbox escape="false" id="txt_ymd_cnt_03" label="0 건" style="" tagname="p" displayFormat="#,### 건"></w2:textbox>
+    					<w2:textbox escape="false" id="txt_ymd_pwr_03" label="0kW" style="" tagname="p" displayFormat="#,###kW"></w2:textbox>
+    				</xf:group>
+    			</xf:group>
+    		</xf:group>
+    		<w2:anchor aria-expanded="false" class="anc_togg hide_pc" id="" outerDiv="false" role="button" style="">
+    			<xf:label><![CDATA[접기]]></xf:label>
+    		</w2:anchor>
+    	</xf:group>
+    	
+    	<!-- [퍼블] 항상 표시 -->
+    </body>
+</html>

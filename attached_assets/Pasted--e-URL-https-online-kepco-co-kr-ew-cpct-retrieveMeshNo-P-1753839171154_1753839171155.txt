@@ -1,0 +1,112 @@
+## 신·재생e 접속가능 용량 호출 ##
+(헤더)
+
+요청 URL
+https://online.kepco.co.kr/ew/cpct/retrieveMeshNo
+요청 메서드
+POST
+상태 코드
+200 OK
+원격 주소
+168.78.237.171:443
+리퍼러 정책
+strict-origin-when-cross-origin
+access-control-allow-headers
+*
+access-control-allow-methods
+*
+access-control-allow-origin
+*
+connection
+Keep-Alive
+content-encoding
+gzip
+content-type
+application/json
+date
+Tue, 29 Jul 2025 23:11:02 GMT
+keep-alive
+timeout=5, max=10000
+server
+ON
+transfer-encoding
+chunked
+vary
+Accept-Encoding
+x-powered-by
+_
+accept
+application/json
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+connection
+keep-alive
+content-length
+163
+content-type
+application/json; charset="UTF-8"
+cookie
+WMONID=DB4Jn5o7gFg; XTVID=A250530173230527259; xloc=2560X1440; _ga=GA1.1.107814184.1750645903; _ga_F6F82N3442=GS2.1.s1750645903$o1$g1$t1750645921$j42$l0$h0; _ga_P8R7448GY6=GS2.1.s1751270430$o1$g1$t1751270448$j42$l0$h0; JSESSIONID=v3mLGBC6AVOlNDNhLtq8ZEHXc9yPGFKospJBb_Zn.node20; system_language=ko; lastAccess=1753827727226; globalDebug=false; NetFunnel_ID=
+host
+online.kepco.co.kr
+origin
+https://online.kepco.co.kr
+referer
+https://online.kepco.co.kr/EWM092D00
+sec-ch-ua
+"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-origin
+submissionid
+mf_wfm_layout_sbm_retrieveMeshNo
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36
+
+
+(페이로드)
+
+dma_reqParam
+: 
+{searchCondition: "address", do: "전북특별자치도", si: "전주시", gu: "덕진구", lidong: "강흥동", li: "춘포리",…}
+
+
+
+(응답)
+
+{
+    "dlt_resultList": [
+        {
+            "JS_MTR_PWR": 0,
+            "SUBST_CAPA": 200000,
+            "VOL_1": 98496,
+            "VOL_2": 10741,
+            "VOL_3": 0,
+            "JS_SUBST_PWR": 0,
+            "G_SUBST_CAPA": "94381",
+            "G_MTR_CAPA": "35665",
+            "MTR_CAPA": 50000,
+            "SUBST_PWR": "101504",
+            "DL_PWR": 14915,
+            "SUBST_NM": "전주",
+            "MTR_PWR": "39259",
+            "G_DL_CAPA": "14314",
+            "SUBST_CD": "2269",
+            "DL_NM": "이서",
+            "JS_DL_PWR": 0,
+            "DL_CAPA": 12000,
+            "DL_CD": "03",
+            "MTR_NO": "3"
+        }
+    ],
+    "rsMsg": {}
+}

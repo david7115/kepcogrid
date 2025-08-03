@@ -1,0 +1,64 @@
+{
+  "regions": {
+    "서울본부": {
+      "substations": {
+        "강남변전소": {
+          "connection_capacity": 85000,
+          "received_capacity": 78500,
+          "planned_capacity": 81200,
+          "spare_capacity": 6800,
+          "status": "정상"
+        },
+        "강북변전소": {
+          "connection_capacity": 72000,
+          "received_capacity": 68300,
+          "planned_capacity": 69800,
+          "spare_capacity": 3700,
+          "status": "정상"
+        },
+        "서초변전소": {
+          "connection_capacity": 95000,
+          "received_capacity": 87600,
+          "planned_capacity": 90100,
+          "spare_capacity": 7400,
+          "status": "정상"
+        }
+      }
+    },
+    "경기본부": {
+      "substations": {
+        "수원변전소": {
+          "connection_capacity": 120000,
+          "received_capacity": 112300,
+          "planned_capacity": 115800,
+          "spare_capacity": 7700,
+          "status": "정상"
+        },
+        "성남변전소": {
+          "connection_capacity": 88000,
+          "received_capacity": 82100,
+          "planned_capacity": 84600,
+          "spare_capacity": 5900,
+          "status": "정상"
+        }
+      }
+    }
+  },
+  "renewable_types": {
+    "태양광": {
+      "max_capacity_limit": 3000,
+      "connection_voltage": "22.9kV",
+      "approval_period": "30일"
+    },
+    "풍력": {
+      "max_capacity_limit": 20000,
+      "connection_voltage": "154kV",
+      "approval_period": "60일"
+    },
+    "수력": {
+      "max_capacity_limit": 10000,
+      "connection_voltage": "22.9kV",
+      "approval_period": "45일"
+    }
+  }
+}
