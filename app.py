@@ -10,7 +10,7 @@ from plotly.subplots import make_subplots
 
 # 페이지 설정
 st.set_page_config(
-    page_title="한국전력공사 신재생에너지 계통접속 용량 조회 시스템",
+    page_title="SAVE ENERGY 한국전력공사 신재생에너지 계통연계 용량 조회 시스템",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="collapsed"
