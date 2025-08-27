@@ -1431,7 +1431,7 @@ def show_main_menu():
         <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
             <p><strong>🔧 개발자 정보</strong></p>
             <p>SAVE ENERGY | DAVID.LEE | 2025.07.30</p>
-            <p><em>한국전력공사 신재생에너지 계통접속 용량 조회 시스템</em></p>
+            <p><em>SAVE ENERGY 한전 신재생에너지 계통접속 용량 조회 시스템</em></p>
         </div>
         """,
         unsafe_allow_html=True
